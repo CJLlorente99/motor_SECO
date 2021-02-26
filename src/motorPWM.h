@@ -5,14 +5,18 @@
 */
 
 #define V_MAX 3.3
-#define port_PWM_IN1 0
-#define port_PWM_IN2 1
-#define port_ENCODER_IN1 2
-#define port_ENCODER_IN2 3
+#define port_PWM_H_IN1 4
+#define port_PWM_H_IN2 5
+#define port_PWM_OUT1 6
+#define port_PWM_OUT2 8
+#define port_ENCODER_IN1 3
+#define port_ENCODER_IN2 7
+#define port_ENABLE 2
+#define port_DEBUG_LED 13
 
 enum direccion{
-    DERECHA,
-    IZQUIERDA
+    HORARIO,
+    ANTI_HORARIO
 };
 
 /*  Declaracion de funcion que maneja los inputs del puente en H dada una dirección y un duty cycle
