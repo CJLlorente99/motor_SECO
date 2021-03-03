@@ -4,15 +4,15 @@
     Usable pins for PWM in Arduino Due are 2-13 pins
 */
 
-#define V_MAX 3.3
 #define port_PWM_H_IN1 4
 #define port_PWM_H_IN2 5
-#define port_PWM_OUT1 6
-#define port_PWM_OUT2 8
 #define port_ENCODER_IN1 3
 #define port_ENCODER_IN2 7
 #define port_ENABLE 2
 #define port_DEBUG_LED 13
+
+#define port_PWM_OUT1 35 // PC3
+#define port_PWM_OUT2 39 // PC7
 
 enum direccion{
     HORARIO,
@@ -26,3 +26,4 @@ enum direccion{
 */
 
 int setPWM(direccion dir, float dutycycle);
+int configurePWM(direccion dir, float dutycycle, int freq);
