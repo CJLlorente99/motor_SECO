@@ -55,40 +55,41 @@ void setup() {
 void loop() {
     Serial.println("Entering infinite loop");
     Serial.println("TIME,N_ENCODER1,N_ENCODER2,DIRECTION");
-        while(1){
-            if(Serial && show_Serial){
-                /* Print valuable info */
-                // Serial.print("El sentido de rotación es ");
-                // if(rotation_direction == 0){
-                //     Serial.println("antihorario");
-                // } else{
-                //     Serial.println("horario");
-                // }
+    // setPWM(HORARIO, 50, 20000);
+    while(true){
+        if(Serial && show_Serial){
+            /* Print valuable info */
+            // Serial.print("El sentido de rotación es ");
+            // if(rotation_direction == 0){
+            //     Serial.println("antihorario");
+            // } else{
+            //     Serial.println("horario");
+            // }
 
-                // Serial.print("El numero de pulsos detectado por el encoder1 es ");
-                // Serial.println(counterEncoder1 - lastCounterEncoder1);
+            // Serial.print("El numero de pulsos detectado por el encoder1 es ");
+            // Serial.println(counterEncoder1 - lastCounterEncoder1);
 
-                // Serial.print("El numero de pulsos detectado por el encoder2 es ");
-                // Serial.println(counterEncoder2 - lastCounterEncoder2);
+            // Serial.print("El numero de pulsos detectado por el encoder2 es ");
+            // Serial.println(counterEncoder2 - lastCounterEncoder2);
 
-                // Serial.print("Time elapsed ");
-                float elapsedTime = millis()-lastTime;
-                // Serial.print(elapsedTime);
-                // Serial.println(" ms");
+            // Serial.print("Time elapsed ");
+            int elapsedTime = millis()-lastTime;
+            // Serial.print(elapsedTime);
+            // Serial.println(" ms");
 
-                Serial.print(elapsedTime);
-                Serial.print(",");
-                Serial.print(counterEncoder1 - lastCounterEncoder1);
-                Serial.print(",");
-                Serial.print(counterEncoder2 - lastCounterEncoder2);
-                Serial.print(",");
-                Serial.println(rotation_direction);
+            Serial.print(elapsedTime);
+            Serial.print(",");
+            Serial.print(counterEncoder1 - lastCounterEncoder1);
+            Serial.print(",");
+            Serial.print(counterEncoder2 - lastCounterEncoder2);
+            Serial.print(",");
+            Serial.println(rotation_direction);
 
-                lastCounterEncoder1 = counterEncoder1;
-                lastCounterEncoder2 = counterEncoder2;
-                lastTime = millis();
+            lastCounterEncoder1 = counterEncoder1;
+            lastCounterEncoder2 = counterEncoder2;
+            lastTime = millis();
 
-                show_Serial = 0;
+            show_Serial = 0;
         }
     }
 }

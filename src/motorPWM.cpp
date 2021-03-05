@@ -1,15 +1,13 @@
-#include <Arduino.h>
+#include "main.h"
 
-#include "motorPWM.h"
-
-const int CPRE_CLK = 84 * 10^6;
+const int CPRE_CLK = 84000000;
 static int actualFreq;
 
-int setPWM(direccion dir, float dutycycle, int freq){
+int
+setPWM(direccion dir, float dutycycle, int freq){
     /* Change update registers */
     int CPRD_counter = (int) (CPRE_CLK/freq);
-    int dutycycle_int = (int)(dutycycle * 100);
-    uint16_t pwm_level = (uint16_t) map(dutycycle_int, 0, 100, 0 , CPRD_counter);
+    uint16_t pwm_level = dutycycle/100 * CPRD_counter;
 
     if(dir == HORARIO){
         REG_PWM_CDTYUPD0 |= PWM_CDTYUPD_CDTYUPD(pwm_level);
@@ -34,27 +32,28 @@ int setPWM(direccion dir, float dutycycle, int freq){
     return 0;
 }
 
-int configurePWM(direccion dir, float dutycycle, int freq){
+int 
+configurePWM(direccion dir, float dutycycle, int freq){
 
     /* Steps followed for configuration in page 996 (ATMEL SAM3X datasheet) */
 
     /* Interrupt sources of the NVIC needed (PWM's id is 36) (interrupts not needed) */
     
+    /* This bit needs to be clear in order to write in other needed PIO's registers */
+    REG_PIOC_WPMR &= !TC_WPMR_WPEN;
+
     /* PMC configuration */
     /* Enable peripheral clocks (PWM's id is 36) */
     REG_PMC_PCER1 |= PMC_PCER1_PID36;
 
     /* PIO configuration */
-    /* This bit needs to be clear in order to write in other needed PIO's registers */
-    REG_PIOC_WPMR &= !TC_WPMR_WPEN;
-
     /* Select which peripheral is to be used (in our case -> B) */
     REG_PIOC_ABSR |= PIO_ABSR_P3;
-    REG_PIOC_ABSR |= PIO_ABSR_P7;
+    REG_PIOC_ABSR |= PIO_ABSR_P5;
 
     /* Select whether pin is to be controlled through the corresponding on-chip peripheral (A or B) or by the PIO controller */
     REG_PIOC_PER |= PIO_PER_P7;
-    REG_PIOC_PER |= PIO_PER_P3;
+    REG_PIOC_PER |= PIO_PER_P5;
 
     /* PWM configuration */
     /* PWM_WPCR Register configuration. WPCMD */
@@ -75,15 +74,18 @@ int configurePWM(direccion dir, float dutycycle, int freq){
     Counter event selection PWM_CMRx
     Configure output waveform polarity PWM_CMRx */
 
-    REG_PWM_CMR0 |= PWM_CMR_CPRE_MCK;
-    REG_PWM_CMR0 |= !PWM_CMR_CALG;
-    REG_PWM_CMR0 |= !PWM_CMR_CES;
-    REG_PWM_CMR0 |= !PWM_CMR_CPOL;
+    REG_PWM_CLK |= PWM_CLK_DIVA(1);
+    REG_PWM_CLK |= PWM_CLK_PREA(0);
+
+    REG_PWM_CMR0 |= PWM_CMR_CPRE_CLKA;
+    REG_PWM_CMR0 &= !PWM_CMR_CALG;
+    REG_PWM_CMR0 &= !PWM_CMR_CES;
+    REG_PWM_CMR0 &= !PWM_CMR_CPOL;
     
-    REG_PWM_CMR1 |= PWM_CMR_CPRE_MCK;
-    REG_PWM_CMR1 |= !PWM_CMR_CALG;
-    REG_PWM_CMR1 |= !PWM_CMR_CES;
-    REG_PWM_CMR1 |= !PWM_CMR_CPOL;    
+    REG_PWM_CMR1 |= PWM_CMR_CPRE_CLKA;
+    REG_PWM_CMR1 &= !PWM_CMR_CALG;
+    REG_PWM_CMR1 &= !PWM_CMR_CES;
+    REG_PWM_CMR1 &= !PWM_CMR_CPOL;    
 
     /* Configure period for each channel PWM_CPRD */
     int CPRD_counter = (int) (CPRE_CLK/freq);
@@ -93,14 +95,13 @@ int configurePWM(direccion dir, float dutycycle, int freq){
     REG_PWM_CPRD1 |= PWM_CPRD_CPRD(CPRD_counter);
 
     /* Configure initial duty cycle PWM_CDTYx */
-    int dutycycle_int = (int)(dutycycle * 100);
-    uint16_t pwm_level = (uint16_t) map(dutycycle_int, 0, 100, 0 , CPRD_counter);
+    uint16_t pwm_level = dutycycle/100 * CPRD_counter;
 
     if(dir == HORARIO){
         REG_PWM_CDTY0 |= PWM_CDTY_CDTY(pwm_level);
-        REG_PWM_CDTY1 |= PWM_CDTY_CDTY(pwm_level);
+        REG_PWM_CDTY1 |= PWM_CDTY_CDTY(0);
     } else{
-        REG_PWM_CDTY0 |= PWM_CDTY_CDTY(pwm_level);
+        REG_PWM_CDTY0 |= PWM_CDTY_CDTY(0);
         REG_PWM_CDTY1 |= PWM_CDTY_CDTY(pwm_level);
     }
 

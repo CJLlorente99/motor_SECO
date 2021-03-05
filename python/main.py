@@ -4,6 +4,12 @@ import numpy as np
 import time
 
 if __name__ == "__main__":
+    if sys.argv[1] == '-h' or sys.argv[1] == '--h' or sys.argv[1] == '-help':
+        print("El formato de llamada a este script es el siguiente \n")
+        print("py main.py [SerialPortName] [Baudrate] [path]")
+        print("i.e. py main.py COM3 9600 ./textfile.txt")
+        break
+        
     # receive arguments
     serialPort = sys.argv[1]
     baudrate = int(sys.argv[2])
