@@ -11,6 +11,7 @@ static unsigned long lastTime;
 static int show_Serial;
 
 void setup() {
+    delay(5000);
     /* Init counters */
     counterEncoder1 = 0;
     counterEncoder2 = 0;
@@ -39,10 +40,10 @@ void setup() {
     Serial.begin(9600);
 
     /* Timer creation and configuration. Timer is  */
-    Timer0.attachInterrupt(&serialActivate).start(1000);
+    Timer0.attachInterrupt(&serialActivate).start(100000);
 
     /* Configure PWM */
-    configurePWM(HORARIO, 50, 20000);
+    // configurePWM(HORARIO, 50, 20000);
 
     /* Set enable always to HIGH */
     digitalWrite(port_ENABLE, HIGH);
@@ -50,47 +51,31 @@ void setup() {
     Serial.println("Setup completed");
 
     // Hardly consider placing a sleep in order to be able to start python script. If done so, care about Timer0.
+    Serial.println("Entering infinite loop");
+    Serial.println("TIME,N_ENCODER1,N_ENCODER2,DIRECTION");
+
+    analogWrite(port_PWM_OUT1, HIGH);
 }
 
 void loop() {
-    Serial.println("Entering infinite loop");
-    Serial.println("TIME,N_ENCODER1,N_ENCODER2,DIRECTION");
-    // setPWM(HORARIO, 50, 20000);
-    while(true){
-        if(Serial && show_Serial){
-            /* Print valuable info */
-            // Serial.print("El sentido de rotación es ");
-            // if(rotation_direction == 0){
-            //     Serial.println("antihorario");
-            // } else{
-            //     Serial.println("horario");
-            // }
+    // setPWM(HORARIO, 50, 20000)
+    if(Serial && show_Serial){
 
-            // Serial.print("El numero de pulsos detectado por el encoder1 es ");
-            // Serial.println(counterEncoder1 - lastCounterEncoder1);
+        int elapsedTime = millis()-lastTime;
 
-            // Serial.print("El numero de pulsos detectado por el encoder2 es ");
-            // Serial.println(counterEncoder2 - lastCounterEncoder2);
+        Serial.print(elapsedTime);
+        Serial.print(",");
+        Serial.print(counterEncoder1 - lastCounterEncoder1);
+        Serial.print(",");
+        Serial.print(counterEncoder2 - lastCounterEncoder2);
+        Serial.print(",");
+        Serial.println(rotation_direction);
 
-            // Serial.print("Time elapsed ");
-            int elapsedTime = millis()-lastTime;
-            // Serial.print(elapsedTime);
-            // Serial.println(" ms");
+        lastCounterEncoder1 = counterEncoder1;
+        lastCounterEncoder2 = counterEncoder2;
+        lastTime = millis();
 
-            Serial.print(elapsedTime);
-            Serial.print(",");
-            Serial.print(counterEncoder1 - lastCounterEncoder1);
-            Serial.print(",");
-            Serial.print(counterEncoder2 - lastCounterEncoder2);
-            Serial.print(",");
-            Serial.println(rotation_direction);
-
-            lastCounterEncoder1 = counterEncoder1;
-            lastCounterEncoder2 = counterEncoder2;
-            lastTime = millis();
-
-            show_Serial = 0;
-        }
+        show_Serial = 0;
     }
 }
 
