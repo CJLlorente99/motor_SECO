@@ -9,7 +9,7 @@ setPWM(direccion dir, float dutycycle, int freq){
     int CPRD_counter = (int) (CPRE_CLK/freq);
     uint16_t pwm_level = dutycycle/100 * CPRD_counter;
 
-    if(dir == HORARIO){
+    if(dir == ANTI_HORARIO){
         REG_PWM_CDTYUPD0 |= PWM_CDTYUPD_CDTYUPD(pwm_level);
         REG_PWM_CDTYUPD1 |= PWM_CDTYUPD_CDTYUPD(0);
     } else{
@@ -52,22 +52,21 @@ configurePWM(direccion dir, float dutycycle, int freq){
     REG_PIOC_ABSR |= PIO_ABSR_P5;
 
     /* Select whether pin is to be controlled through the corresponding on-chip peripheral (A or B) or by the PIO controller */
-    REG_PIOC_PER |= PIO_PER_P7;
-    REG_PIOC_PER |= PIO_PER_P5;
+    REG_PIOC_PDR = PIO_PDR_P3 | PIO_PDR_P5;
 
     /* PWM configuration */
     /* PWM_WPCR Register configuration. WPCMD */
-    REG_PWM_WPCR |= PWM_WPCR_WPCMD(1);
-    REG_PWM_WPCR |= PWM_WPCR_WPRG0;
-    REG_PWM_WPCR |= PWM_WPCR_WPRG1;
+    // REG_PWM_WPCR |= PWM_WPCR_WPCMD(1);
+    // REG_PWM_WPCR |= PWM_WPCR_WPRG0;
+    // REG_PWM_WPCR |= PWM_WPCR_WPRG1;
 
     /* Make sure some registers are 0 in order to be able to write afterwards */
-    REG_PWM_WPSR &= !PWM_WPSR_WPSWS3;
-    REG_PWM_WPSR &= !PWM_WPSR_WPHWS3;
-    REG_PWM_WPSR &= !PWM_WPSR_WPSWS2;
-    REG_PWM_WPSR &= !PWM_WPSR_WPHWS2;
-    REG_PWM_WPSR &= !PWM_WPSR_WPSWS0;
-    REG_PWM_WPSR &= !PWM_WPSR_WPHWS0;
+    // REG_PWM_WPSR &= !PWM_WPSR_WPSWS3;
+    // REG_PWM_WPSR &= !PWM_WPSR_WPHWS3;
+    // REG_PWM_WPSR &= !PWM_WPSR_WPSWS2;
+    // REG_PWM_WPSR &= !PWM_WPSR_WPHWS2;
+    // REG_PWM_WPSR &= !PWM_WPSR_WPSWS0;
+    // REG_PWM_WPSR &= !PWM_WPSR_WPHWS0;
 
     /* Clock selection for each channel (Channel 0 and Channel 1) PWM_CMRx
     Configure waveform allignment PWM_CMRx
@@ -97,7 +96,7 @@ configurePWM(direccion dir, float dutycycle, int freq){
     /* Configure initial duty cycle PWM_CDTYx */
     uint16_t pwm_level = dutycycle/100 * CPRD_counter;
 
-    if(dir == HORARIO){
+    if(dir == ANTI_HORARIO){
         REG_PWM_CDTY0 |= PWM_CDTY_CDTY(pwm_level);
         REG_PWM_CDTY1 |= PWM_CDTY_CDTY(0);
     } else{

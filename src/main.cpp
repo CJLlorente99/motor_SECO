@@ -1,22 +1,24 @@
 #include "main.h"
 
-static int counterEncoder1;
-static int counterEncoder2;
-static int lastCounterEncoder1;
-static int lastCounterEncoder2;
-static int rotation_direction;
+int counterEncoder1;
+int lastCounterEncoder1;
+int counterEncoder2;
+int lastCounterEncoder2;
+int rotation_direction;
 
-static unsigned long lastTime;
+unsigned long lastTime;
 
-static int show_Serial;
+int show_Serial;
 
 void setup() {
     delay(5000);
+    int rv;
     /* Init counters */
     counterEncoder1 = 0;
-    counterEncoder2 = 0;
     lastCounterEncoder1 = 0;
+    counterEncoder2 = 0;
     lastCounterEncoder2 = 0;
+    rotation_direction = 0; // 0 -> ANTIHORARIO; 1 -> HORARIO
 
     lastTime = 0;
 
@@ -36,14 +38,18 @@ void setup() {
     attachInterrupt(digitalPinToInterrupt(port_ENCODER_IN1), &ENCODER1_ISR, RISING);
     attachInterrupt(digitalPinToInterrupt(port_ENCODER_IN2), &ENCODER2_ISR, RISING);
 
-    /* initialize serial communication */
+    /* Initialize serial communication */
+    /* Baudrate  */
     Serial.begin(9600);
 
     /* Timer creation and configuration. Timer is  */
-    Timer0.attachInterrupt(&serialActivate).start(100000);
+    Timer0.attachInterrupt(&serialActivate).start(10000);
 
     /* Configure PWM */
-    // configurePWM(HORARIO, 50, 20000);
+    rv = configurePWM(HORARIO, 20, 20000);
+    if(rv != 0){
+        Serial.println("ERROR IN CONFIGURE PWM");
+    }
 
     /* Set enable always to HIGH */
     digitalWrite(port_ENABLE, HIGH);
@@ -54,12 +60,16 @@ void setup() {
     Serial.println("Entering infinite loop");
     Serial.println("TIME,N_ENCODER1,N_ENCODER2,DIRECTION");
 
-    analogWrite(port_PWM_OUT1, HIGH);
 }
 
 void loop() {
-    // setPWM(HORARIO, 50, 20000)
     if(Serial && show_Serial){
+
+        if(counterEncoder2 == counterEncoder1){
+            // do nothing. keep rotation direction as it is
+        } else{
+            rotation_direction = (counterEncoder2 > counterEncoder1);
+        }
 
         int elapsedTime = millis()-lastTime;
 
@@ -71,33 +81,27 @@ void loop() {
         Serial.print(",");
         Serial.println(rotation_direction);
 
+        lastTime = millis();
         lastCounterEncoder1 = counterEncoder1;
         lastCounterEncoder2 = counterEncoder2;
-        lastTime = millis();
 
         show_Serial = 0;
     }
 }
 
-// Timer routine fo showing serial info periodically
+/* Timer routine fo showing serial info periodically */
 void
 serialActivate(void){
     show_Serial = 1;
 }
 
-// ISR for encoder interruptions
+/* ISR for encoder interruptions */
 void
 ENCODER1_ISR(void){
     counterEncoder1 += 1;
-
-    if(counterEncoder1 > counterEncoder2)
-        rotation_direction = 0;
 }
 
 void
 ENCODER2_ISR(void){
     counterEncoder2 += 1;
-
-    if(counterEncoder2 > counterEncoder1)
-        rotation_direction = 1;
 }
