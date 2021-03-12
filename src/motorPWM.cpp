@@ -4,10 +4,27 @@ const int CPRE_CLK = 84000000;
 static int actualFreq;
 
 int
-setPWM(direccion dir, float dutycycle, int freq){
-    /* Change update registers */
+setPWM(float volt, int freq){
+    direccion dir;
+    /* Voltage saturation, direction selection and conversion to dutycycle */
+    if(volt > 12){
+        volt = 12;
+    } else if(volt < -12){
+        volt = -12;
+    }
+
+    if(volt > 0){
+        dir = HORARIO;
+    } else{
+        dir = ANTI_HORARIO;
+    }
+
     int CPRD_counter = (int) (CPRE_CLK/freq);
-    uint16_t pwm_level = dutycycle/100 * CPRD_counter;
+    uint16_t pwm_level = abs(volt)/12 * CPRD_counter;
+
+
+    /* Change update registers */
+    
 
     if(dir == ANTI_HORARIO){
         REG_PWM_CDTYUPD0 |= PWM_CDTYUPD_CDTYUPD(pwm_level);
@@ -33,7 +50,9 @@ setPWM(direccion dir, float dutycycle, int freq){
 }
 
 int 
-configurePWM(direccion dir, float dutycycle, int freq){
+configurePWM(float volt, int freq){
+
+    direccion dir;
 
     /* Steps followed for configuration in page 996 (ATMEL SAM3X datasheet) */
 
@@ -79,12 +98,12 @@ configurePWM(direccion dir, float dutycycle, int freq){
     REG_PWM_CMR0 |= PWM_CMR_CPRE_CLKA;
     REG_PWM_CMR0 &= !PWM_CMR_CALG;
     REG_PWM_CMR0 &= !PWM_CMR_CES;
-    REG_PWM_CMR0 &= !PWM_CMR_CPOL;
+    REG_PWM_CMR0 |= PWM_CMR_CPOL;
     
     REG_PWM_CMR1 |= PWM_CMR_CPRE_CLKA;
     REG_PWM_CMR1 &= !PWM_CMR_CALG;
     REG_PWM_CMR1 &= !PWM_CMR_CES;
-    REG_PWM_CMR1 &= !PWM_CMR_CPOL;    
+    REG_PWM_CMR1 |= PWM_CMR_CPOL;    
 
     /* Configure period for each channel PWM_CPRD */
     int CPRD_counter = (int) (CPRE_CLK/freq);
@@ -94,7 +113,20 @@ configurePWM(direccion dir, float dutycycle, int freq){
     REG_PWM_CPRD1 |= PWM_CPRD_CPRD(CPRD_counter);
 
     /* Configure initial duty cycle PWM_CDTYx */
-    uint16_t pwm_level = dutycycle/100 * CPRD_counter;
+    /* Voltage saturation, direction selection and conversion to dutycycle */
+    if(volt > 12){
+        volt = 12;
+    } else if(volt < -12){
+        volt = -12;
+    }
+
+    if(volt > 0){
+        dir = HORARIO;
+    } else{
+        dir = ANTI_HORARIO;
+    }
+
+    uint16_t pwm_level = abs(volt)/12 * CPRD_counter;
 
     if(dir == ANTI_HORARIO){
         REG_PWM_CDTY0 |= PWM_CDTY_CDTY(pwm_level);
