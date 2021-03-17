@@ -18,13 +18,13 @@ if __name__ == "__main__":
     voltageValues = np.arange(0, 12+gap, gap)
 
     with open(fileName, 'w') as myfile:
-        myfile.write('"TIME, VOLTAGE\\n"\n')
-        myfile.write('"' + str(time_on * 1000) +',' + str(0) + '\\n" \n')
-        myfile.write('"' + str(time_on * 1000) +',' + str(0) + '\\n" \n')
+        myfile.write('const char* csv_str = \t"TIME, VOLTAGE\\n"\n')
+        myfile.write('\t\t\t\t\t\t"' + str(time_on * 1000) +',' + str(0) + '\\n" \n')
+        myfile.write('\t\t\t\t\t\t"' + str(time_on * 1000) +',' + str(0) + '\\n" \n')
         for j in range(repetitions):
             for i in voltageValues:        
-                myfile.write('"' + str(time_on * 1000) +',' + str(i) + '\\n" \n')
-                # myfile.write('"' + str(time_off * 1000) +',' + str(0) + '\\n" \n')
+                myfile.write('\t\t\t\t\t\t"' + str(time_on * 1000) +',' + str(i) + '\\n" \n')
+        myfile.write('\t\t\t\t\t\t;')
 
     print('CSV file written!', end = '\n')
     print('Estimated test duration: ' + "{:.2f}".format(repetitions*len(voltageValues)*(time_on+time_off)/(1000*60)) + ' minutes', end = '\n')
