@@ -18,7 +18,9 @@
 void ENCODER1_ISR();
 void ENCODER2_ISR();
 void serialActivate();
-void testISR();
+void stopISR();
+void sampleData();
+void restartExecution();
 
 /* Enumeration describing all possible rotation movements */
 enum direccion{
@@ -30,8 +32,8 @@ enum direccion{
 /* Struct declaration and definition that contains encoder state */
 struct state_s
 {
-    int stateEncoder1 : 1;
-    int stateEncoder2 : 1;
+    int stateEncoder1;
+    int stateEncoder2;
 };
 
 typedef struct state_s state_t;
@@ -67,4 +69,4 @@ int testInitialization(uint32_t* testTimes, float* testVoltages);
  *      - ANTIHORARIO = 1
  *      - WRONG = 2
 */
-int decide_direction();
+int decide_direction(int currentEncoder1, int currentEncoder2, int previousEncoder1, int previousEncoder2);

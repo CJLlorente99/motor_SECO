@@ -34,4 +34,7 @@ if __name__ == "__main__":
             line = line.decode('utf-8')
             with open(path, 'at') as file:
                 file.write(line + '\n')
+            if(line == "TEST ENDED"):
+                print("TEST ENDED")
+                exit()
 
