@@ -5,9 +5,9 @@ import time
 
 if __name__ == "__main__":
     if sys.argv[1] == '-h' or sys.argv[1] == '--h' or sys.argv[1] == '-help':
-        print("El formato de llamada a este script es el siguiente \n")
-        print("py main.py [SerialPortName] [Baudrate] [path]")
-        print("i.e. py main.py COM3 9600 ./textfile.txt")
+        print('El formato de llamada a este script es el siguiente \n')
+        print('py readSerial.py [SerialPortName] [Baudrate] [path] \n')
+        print('i.e. py readSerial.py COM3 9600 ./textfile.txt \n')
         exit()
         
     # receive arguments
@@ -26,7 +26,7 @@ if __name__ == "__main__":
                 continue
             # line = np.fromstring(line.decode('ascii', errors='replace'), sep=' ')
         except KeyboardInterrupt:
-            print("Exiting")
+            print('Exiting')
             break
 
         # Abrir file y escribir CSV en un archivo

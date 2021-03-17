@@ -8,12 +8,12 @@ float* testVoltages;
 int testSize;
 
 /* Encoder variables */
-int pulseCounter;
+volatile int pulseCounter;
 int lastPulseCounter;
 int timerms;
 float voltage;
-static state_t currentState;
-static state_t previousState;
+static volatile state_t currentState;
+static volatile state_t previousState;
 int dir;
 
 /* Flag activated by timer to send serial data */
@@ -58,7 +58,7 @@ void setup() {
     CSV_Parser cp(csv_str, /* format */ "Lf"); // TIME, VOLTAGE // L = uint_32, f = float
     testTimes = (uint32_t*)cp["TIME"]; 
     testVoltages = (float*)cp["VOLTAGE"];
-    testSize = sizeof(testTimes)/sizeof(testTimes[0]); // or sizeof(testVoltages)/sizeof(testVoltages[0])
+    testSize = cp.getRowsCount();
 
     /* Timer creation and configuration. Timer is  */
     Timer0.attachInterrupt(&serialActivate).start(1000);
@@ -198,6 +198,7 @@ testISR(){
     if(testCounter + 1 >= testSize){
         Serial.println("END OF TEST");
         Timer1.stop();
+        // Timer0.stop();
         return;
     }
     Timer1.start(testTimes[testCounter]);
