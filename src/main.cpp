@@ -9,11 +9,9 @@ int testSize;
 
 /* Encoder variables */
 volatile int pulseCounter;
-int lastPulseCounter;
 int timerms;
 static volatile state_t currentState;
 static volatile state_t previousState;
-int dir;
 
 int pulses[1251];
 int infoState[4][1251];
@@ -27,7 +25,6 @@ void setup() {
 
     /* Init counters */   
     pulseCounter = 0;
-    lastPulseCounter = 0;
     testCounter = 0;
     timerms = 0;
 
@@ -36,7 +33,7 @@ void setup() {
     previousState.stateEncoder1 = 0;
     previousState.stateEncoder2 = 0;
 
-    memset(pulses, 0, 1201*sizeof(int));
+    memset(pulses, 0, 1251*sizeof(int));
 
     show_Serial = 0;
 
@@ -83,31 +80,12 @@ void setup() {
     digitalWrite(port_ENABLE, HIGH);
 
     Serial.println("Setup completed");
-
-    // Hardly consider placing a sleep in order to be able to start python script. If done so, care about Timer0.
     Serial.println("Entering infinite loop");
-    // Serial.println("TIME,VOLTAGE,N_ENCODER1,N_ENCODER2");
+    Serial.println("VOLTAGE,INDEX,PULSES");
 
-    // Serial.print(timerms);
-    // Serial.print(", ");
-    // Serial.print(voltage);
-    // Serial.print(", ");
-    // Serial.print(pulseCounter - lastPulseCounter);
-    // Serial.print(", ");
-    // Serial.print(dir);
-    // Serial.print(", ");
-
-    // Serial.print(currentState.stateEncoder1);
-    // Serial.print(", ");
-    // Serial.print(currentState.stateEncoder2);
-    // Serial.print(", ");
-    // Serial.print(previousState.stateEncoder1);
-    // Serial.print(", ");
-    // Serial.println(previousState.stateEncoder2);
 
     /* Test initialization */
     setPWM(testVoltages[testCounter++], 20000);
-    // setPWM(6, 20000);
 }
 
 void loop() {
@@ -129,26 +107,6 @@ void loop() {
         }
         Timer4.attachInterrupt(&restartExecution).start(500000);
 
-        // dir = decide_direction();
-
-        // Serial.print(timerms);
-        // Serial.print(", ");
-        // Serial.print(voltage);
-        // Serial.print(", ");
-        // Serial.print(pulseCounter - lastPulseCounter);
-        // Serial.print(", ");
-        // Serial.print(dir);
-        // Serial.print(", ");
-
-        // Serial.print(currentState.stateEncoder1);
-        // Serial.print(", ");
-        // Serial.print(currentState.stateEncoder2);
-        // Serial.print(", ");
-        // Serial.print(previousState.stateEncoder1);
-        // Serial.print(", ");
-        // Serial.println(previousState.stateEncoder2);
-
-        // lastPulseCounter = pulseCounter;
         show_Serial = 0;
     }
 }
@@ -170,6 +128,8 @@ void
 ENCODER1_ISR(){
     // previousState.stateEncoder1 = !digitalRead(port_ENCODER_IN1);
     // currentState.stateEncoder1 = digitalRead(port_ENCODER_IN1);
+    // previousState.stateEncoder2 = !digitalRead(port_ENCODER_IN2);
+    // currentState.stateEncoder2 = digitalRead(port_ENCODER_IN2);
     // pulseCounter++;
     if(digitalRead(port_ENCODER_IN1) == digitalRead(port_ENCODER_IN2)){
         pulseCounter++;
@@ -180,6 +140,8 @@ ENCODER1_ISR(){
 
 void
 ENCODER2_ISR(){
+    // previousState.stateEncoder1 = !digitalRead(port_ENCODER_IN1);
+    // currentState.stateEncoder1 = digitalRead(port_ENCODER_IN1);
     // previousState.stateEncoder2 = !digitalRead(port_ENCODER_IN2);
     // currentState.stateEncoder2 = digitalRead(port_ENCODER_IN2);
     // pulseCounter++;
