@@ -1,6 +1,10 @@
 #include "main.h"
 #include "testCSV.h"
 
+/* Controller parameters */
+float finalRad;
+float Kp;
+
 /* Test variables */
 int testCounter;
 uint32_t* testTimes;
@@ -19,9 +23,16 @@ int infoState[4][1251];
 /* Flag activated by timer to send serial data */
 int show_Serial;
 
+/* Flag activated to call the controller */
+int controllerCalling;
+
 void setup() {
     delay(5000);
     int rv;
+
+    /* Set final radians */
+    finalRad = PI;
+    Kp = 0.5;
 
     /* Init counters */   
     pulseCounter = 0;
@@ -36,6 +47,7 @@ void setup() {
     memset(pulses, 0, 1251*sizeof(int));
 
     show_Serial = 0;
+    controllerCalling = 0;
 
     /* Set pinMode */
     // pinMode(port_PWM_H_IN1, INPUT);
@@ -83,6 +95,8 @@ void setup() {
     Serial.println("Entering infinite loop");
     Serial.println("VOLTAGE,INDEX,PULSES");
 
+    /* Controller initialization */
+    Timer3.attachInterrupt(&callController).start(5000);
 
     /* Test initialization */
     setPWM(testVoltages[testCounter++], 20000);
@@ -109,12 +123,22 @@ void loop() {
 
         show_Serial = 0;
     }
+
+    if(controllerCalling){
+        proportionalController(finalRad, readPos(pulseCounter), Kp);
+        controllerCalling = 0;
+    }
 }
 
 /* Timer routine fo showing serial info periodically */
 void
 serialActivate(){
     show_Serial = 1;
+}
+
+void
+callController(){
+    controllerCalling = 1;
 }
 
 /* */
@@ -206,4 +230,10 @@ restartExecution(){
     Timer1.start(testTimes[testCounter++]);
     Timer2.start(1200000);
     Timer4.stop();
+}
+
+float
+readPos(int pulses){
+    float res = pulses / CPR *2 * PI;
+    return res; 
 }

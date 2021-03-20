@@ -14,6 +14,8 @@
 #define port_PWM_OUT1 35 // PC3
 #define port_PWM_OUT2 37 // PC5
 
+#define CPR 48
+
 /* ISR declaration for timers and GPIO interruptions */
 void ENCODER1_ISR();
 void ENCODER2_ISR();
@@ -21,6 +23,7 @@ void serialActivate();
 void stopISR();
 void sampleData();
 void restartExecution();
+void callController();
 
 /* Enumeration describing all possible rotation movements */
 enum direccion{
@@ -70,3 +73,21 @@ int testInitialization(uint32_t* testTimes, float* testVoltages);
  *      - WRONG = 2
 */
 int decide_direction(int currentEncoder1, int currentEncoder2, int previousEncoder1, int previousEncoder2);
+
+/*  readPos
+ *  Translates pulse counts to actual position in radians
+ *  Parameters
+ *      - pulses -> int
+ *  Returns
+ *      - radians -> float
+*/
+float readPos(int pulses);
+
+/*  proportionalController
+ *  Calls controller to set voltage
+ *  Parameters
+ *      - finalRad -> float 
+ *      - actualRad -> float
+ *      - Kp -> float
+*/
+void proportionalController(float finalRad, float actualRad, float Kp);
