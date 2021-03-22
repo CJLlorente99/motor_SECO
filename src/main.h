@@ -1,8 +1,7 @@
 #include <Arduino.h>
 
 #include <DueTimer.h>
-#include <CSV_Parser.h>
-#include <SD.h>
+#include "SPI.h"
 
 #define port_PWM_H_IN1 4
 #define port_PWM_H_IN2 5
@@ -15,28 +14,33 @@
 #define port_PWM_OUT2 37 // PC5
 
 #define CPR 48
+#define FREQ 20000
+
+/* Controller constants */
+#define FINALRAD PI/2
+#define CONTROLLERTOUSE PROPORTIONAL
+#define PERIOD 10000
+#define TAUD 0.5
+#define TAUI 0.5
+
+#define KP 1
 
 /* ISR declaration for timers and GPIO interruptions */
 void ENCODER1_ISR();
 void ENCODER2_ISR();
 void serialActivate();
-void stopISR();
 void sampleData();
 void restartExecution();
-void callController();
+void activateController();
+
+/* From pulses to rad */
+float pulsesToRad(int pulses);
 
 /* Enumeration describing all possible rotation movements */
 enum direccion{
     HORARIO = 0,
     ANTI_HORARIO = 1,
     WRONG = 2
-};
-
-/* Struct declaration and definition that contains encoder state */
-struct state_s
-{
-    int stateEncoder1;
-    int stateEncoder2;
 };
 
 typedef struct state_s state_t;
@@ -57,22 +61,6 @@ int setPWM(float volt, int freq);
 */
 int configurePWM(float volt, int freq);
 
-/*  testInitialization
- *  Takes array of times and voltages and runs first test values
- *  Parameters
- *      - testTimes -> uint32_t*
- *      - testVoltages -> float*
-*/
-int testInitialization(uint32_t* testTimes, float* testVoltages);
-
-/*  decide_direction
- *  Decides direction based on previous and current encoder state
- *  Returns
- *      - HORARIO = 0
- *      - ANTIHORARIO = 1
- *      - WRONG = 2
-*/
-int decide_direction(int currentEncoder1, int currentEncoder2, int previousEncoder1, int previousEncoder2);
 
 /*  readPos
  *  Translates pulse counts to actual position in radians
@@ -91,3 +79,27 @@ float readPos(int pulses);
  *      - Kp -> float
 */
 void proportionalController(float finalRad, float actualRad, float Kp);
+
+/*
+ *
+ * 
+ * 
+ * 
+*/
+void proportionalDerivativeController(float finalRad, float actualRad, float lastRad, float Kp, float tauD, int period);
+
+/*
+ *
+ * 
+ * 
+ * 
+*/
+void proportionalIntegralController(float finalRad, float actualRad, float lastErrorArray[], int sizeError, float Kp, float tauI, int period);
+
+/*
+ *
+ * 
+ * 
+ * 
+*/
+void proportionalIntegralDerivativeController(float finalRad, float actualRad, float lastRad, float lastErrorArray[], int sizeError, float Kp, float tauI, float tauD, int period);
