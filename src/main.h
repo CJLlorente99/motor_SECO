@@ -80,26 +80,42 @@ float readPos(int pulses);
 */
 void proportionalController(float finalRad, float actualRad, float Kp);
 
-/*
- *
- * 
- * 
- * 
+/*  proportionalDerivativeController
+ *  Calls controller to set voltage
+ *  Parameters
+ *      - finalRad -> float 
+ *      - actualRad -> float
+ *      - lastRad -> float valor en radianes en la última llamada
+ *      - Kp -> float
+ *      - tauD -> float
+ *      - period -> int
 */
 void proportionalDerivativeController(float finalRad, float actualRad, float lastRad, float Kp, float tauD, int period);
 
-/*
- *
- * 
- * 
- * 
+/*  proportionalIntegralController
+ *  Calls controller to set voltage
+ *  Parameters
+ *      - finalRad -> float 
+ *      - actualRad -> float
+ *      - lastErrorArray[] -> float[] valor de los errores (usado para la integral)
+ *      - sizeError -> int tamaño de lastErrorArray
+ *      - Kp -> float
+ *      - tauI -> float
+ *      - period -> int
 */
 void proportionalIntegralController(float finalRad, float actualRad, float lastErrorArray[], int sizeError, float Kp, float tauI, int period);
 
-/*
- *
- * 
- * 
- * 
+/*  proportionalIntegralController
+ *  Calls controller to set voltage
+ *  Parameters
+ *      - finalRad -> float 
+ *      - actualRad -> float
+ *      - lastRad -> float valor en radianes en la última llamada
+ *      - lastErrorArray[] -> float[] valor de los errores (usado para la integral)
+ *      - sizeError -> int tamaño de lastErrorArray
+ *      - Kp -> float
+ *      - tauI -> float
+ *      - tauD -> float
+ *      - period -> int
 */
 void proportionalIntegralDerivativeController(float finalRad, float actualRad, float lastRad, float lastErrorArray[], int sizeError, float Kp, float tauI, float tauD, int period);

@@ -1,5 +1,7 @@
 #include "main.h"
 
+// cuidado con el periodo, lo queremos en segundos o en milisegundos??
+
 void
 proportionalController(float finalRad, float actualRad, float Kp){
     float u = (finalRad-actualRad)*Kp;
