@@ -176,10 +176,12 @@ void loop() {
 /* Timer routine fo showing serial info periodically */
 void
 serialActivate(){
+    // Iniciar timer3 que activa una variable
     float actualRad = pulsesToRad(pulseCounter);
     if((abs(finalRad*REDUCTORA - actualRad) < 2*PI/CPR) && (abs(actualVoltage) < 0.6)){
         Serial.println("Hola");
         show_Serial = 1;
+        // Apagar timer3 para que no se active una variable
     } else {
         show_Serial = 0;
     }
@@ -191,7 +193,7 @@ activateController(){
     controllerActivation = 1;
 }
 
-/* */
+/* ISR for storing data that will be shown afterward */
 void
 sampleData(){
     pulses = (int*)realloc(pulses, ++timerms * sizeof(int));
@@ -217,6 +219,7 @@ ENCODER2_ISR(){
     }
 }
 
+/* Function used to give time for serial printing */
 void
 restartExecution(){
     Timer4.stop();
