@@ -10,11 +10,8 @@ int testSize;
 /* Encoder variables */
 volatile int pulseCounter;
 int timerms;
-static volatile state_t currentState;
-static volatile state_t previousState;
 
 int pulses[1251];
-int infoState[4][1251];
 
 /* Flag activated by timer to send serial data */
 int show_Serial;
@@ -27,11 +24,6 @@ void setup() {
     pulseCounter = 0;
     testCounter = 0;
     timerms = 0;
-
-    currentState.stateEncoder1 = 0;
-    currentState.stateEncoder2 = 0;
-    previousState.stateEncoder1 = 0;
-    previousState.stateEncoder2 = 0;
 
     memset(pulses, 0, 1251*sizeof(int));
 
@@ -50,10 +42,6 @@ void setup() {
     /* Encoder interrupts */
     attachInterrupt(digitalPinToInterrupt(port_ENCODER_IN1), &ENCODER1_ISR, CHANGE);
     attachInterrupt(digitalPinToInterrupt(port_ENCODER_IN2), &ENCODER2_ISR, CHANGE);
-
-    /* Analyze intial state */
-    currentState.stateEncoder1 = digitalRead(port_ENCODER_IN1);
-    currentState.stateEncoder2 = digitalRead(port_ENCODER_IN2);
 
     /* Initialize serial communication */
     /* Baudrate  */
@@ -126,11 +114,6 @@ sampleData(){
 /* ISR for encoder interruptions */
 void
 ENCODER1_ISR(){
-    // previousState.stateEncoder1 = !digitalRead(port_ENCODER_IN1);
-    // currentState.stateEncoder1 = digitalRead(port_ENCODER_IN1);
-    // previousState.stateEncoder2 = !digitalRead(port_ENCODER_IN2);
-    // currentState.stateEncoder2 = digitalRead(port_ENCODER_IN2);
-    // pulseCounter++;
     if(digitalRead(port_ENCODER_IN1) == digitalRead(port_ENCODER_IN2)){
         pulseCounter++;
     } else{
@@ -140,47 +123,11 @@ ENCODER1_ISR(){
 
 void
 ENCODER2_ISR(){
-    // previousState.stateEncoder1 = !digitalRead(port_ENCODER_IN1);
-    // currentState.stateEncoder1 = digitalRead(port_ENCODER_IN1);
-    // previousState.stateEncoder2 = !digitalRead(port_ENCODER_IN2);
-    // currentState.stateEncoder2 = digitalRead(port_ENCODER_IN2);
-    // pulseCounter++;
     if(digitalRead(port_ENCODER_IN1) == digitalRead(port_ENCODER_IN2)){
         pulseCounter--;
     } else{
         pulseCounter++;
     }
-}
-
-/* Decide direction base on states and previous states */
-int
-decide_direction(int currentEncoder1, int currentEncoder2, int previousEncoder1, int previousEncoder2){
-    if(currentEncoder1 == 0 && currentEncoder2 == 0){
-        if(previousEncoder1 == 0 && previousEncoder2 == 1){
-            return HORARIO;
-        } else if(previousEncoder1 == 1 && previousEncoder2 == 0){
-            return ANTI_HORARIO;
-        }
-    } else if(currentEncoder1 == 0 && currentEncoder2 == 1){
-        if(previousState.stateEncoder1 == 1 && previousState.stateEncoder2 == 1){
-            return HORARIO;
-        } else if(previousEncoder1 == 0 && previousEncoder2 == 0){
-            return ANTI_HORARIO;
-        }
-    } else if(currentEncoder1 == 1 && currentEncoder2 == 0){
-        if(previousState.stateEncoder1 == 0 && previousState.stateEncoder2 == 0){
-            return HORARIO;
-        } else if(previousEncoder1 == 1 && previousEncoder2 == 1){
-            return ANTI_HORARIO;
-        }
-    } else if(currentEncoder1 == 1 && currentEncoder2 == 0){
-        if(previousState.stateEncoder1 == 1 && previousState.stateEncoder2 == 0){
-            return HORARIO;
-        } else if(previousEncoder1 == 0 && previousEncoder2 == 1){
-            return ANTI_HORARIO;
-        }
-    } 
-    return WRONG;
 }
 
 /* ISR to be called when test CSV says voltage should be changed */
@@ -192,10 +139,6 @@ stopISR(){
 void
 restartExecution(){
     memset(pulses, 0, 1251 * sizeof(int));
-    memset(infoState[0], 0, 1251 * sizeof(int));
-    memset(infoState[1], 0, 1251 * sizeof(int));
-    memset(infoState[2], 0, 1251 * sizeof(int));
-    memset(infoState[3], 0, 1251 * sizeof(int));
 
     timerms = 0;
     pulseCounter = 0;

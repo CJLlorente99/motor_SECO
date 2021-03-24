@@ -29,13 +29,6 @@ enum direccion{
     WRONG = 2
 };
 
-/* Struct declaration and definition that contains encoder state */
-struct state_s
-{
-    int stateEncoder1;
-    int stateEncoder2;
-};
-
 typedef struct state_s state_t;
 
 /*  setPWM
@@ -61,12 +54,3 @@ int configurePWM(float volt, int freq);
  *      - testVoltages -> float*
 */
 int testInitialization(uint32_t* testTimes, float* testVoltages);
-
-/*  decide_direction
- *  Decides direction based on previous and current encoder state
- *  Returns
- *      - HORARIO = 0
- *      - ANTIHORARIO = 1
- *      - WRONG = 2
-*/
-int decide_direction(int currentEncoder1, int currentEncoder2, int previousEncoder1, int previousEncoder2);
