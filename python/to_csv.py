@@ -2,29 +2,51 @@ import math
 import sys
 import numpy as np
 
-if __name__ == "__main__":
-    if sys.argv[1] == '-h' or sys.argv[1] == '--h' or sys.argv[1] == '-help':
-        print('El formato de llamada de este script es el siguiente:', end = '\n')
-        print('py to_csv.py [gap] [repetitions] [time_on] [time_off] [fileName]', end = '\n') 
-        print('i.e. py to_csv.py 1 10 1000 1000 ./to_csv.csv \n')
-        exit()
+# if __name__ == "__main__":
+#     if sys.argv[1] == '-h' or sys.argv[1] == '--h' or sys.argv[1] == '-help':
+#         print('El formato de llamada de este script es el siguiente:', end = '\n')
+#         print('py to_csv.py [arrayPositions] (in revolutions)', end = '\n') 
+#         print('i.e. py to_csv.py [2, 3, 4] ./to_csv.csv \n')
+#         exit()
 
-    gap = float(sys.argv[1])
-    repetitions = int(sys.argv[2])
-    time_on = int(sys.argv[3]) # in milisecond
-    time_off = int(sys.argv[4]) # in milisecond
-    fileName = sys.argv[5]
+    # positions = np.asarray(sys.argv[1])
+position = 1
+    # print(positions)
 
-    voltageValues = np.arange(0, 12+gap, gap)
+ContollerType = [0, 1, 2, 3]
+TauInit = 2
+TauNumber = 4
+KpInit = 2
+KpNumber = 4
 
-    with open(fileName, 'w') as myfile:
-        myfile.write('const char* csv_str = \t"TIME, VOLTAGE\\n"\n')
-        myfile.write('\t\t\t\t\t\t"' + str(time_on * 1000) +',' + str(0) + '\\n" \n')
-        myfile.write('\t\t\t\t\t\t"' + str(time_on * 1000) +',' + str(0) + '\\n" \n')
-        for j in range(repetitions):
-            for i in voltageValues:        
-                myfile.write('\t\t\t\t\t\t"' + str(time_on * 1000) +',' + str(i) + '\\n" \n')
-        myfile.write('\t\t\t\t\t\t;')
+with open("positions.txt", 'w') as myfile:
+    myfile.write('const char* csv_str = \t"CONTROLLER, POSITION, TAUI, TAUD, KP\\n"\n')
 
-    print('CSV file written!', end = '\n')
-    print('Estimated test duration: ' + "{:.2f}".format(repetitions*len(voltageValues)*(time_on+time_off)/(1000*60)) + ' minutes', end = '\n')
+    m = 0
+    for n in range(KpNumber):      
+        myfile.write('\t\t\t\t\t\t"' + str(ContollerType[m]) + ", " + str(position*2*math.pi) + ', 0.0, 0.0, ' + str(KpInit/(2**n)) + '\\n" \n')
+        # myfile.write('\t\t\t\t\t\t"' + str(ContollerType[m]) + ", " + str(-2*math.pi*(float(positions[i]%1))) + ", 0.0, 0.0, "+ str(n * KpGap + KpGap) + '\\n" \n')
+    
+    m = 1
+    for j in range(TauNumber): 
+        for n in range(KpNumber):      
+            myfile.write('\t\t\t\t\t\t"' + str(ContollerType[m]) + ", " + str(position*2*math.pi) + ', 0.0, ' + str(TauInit/(2**n)) + ', ' + str(KpInit/(2**n)) + '\\n" \n')
+            # myfile.write('\t\t\t\t\t\t"' + str(ContollerType[m]) + ", " + str(-2*math.pi*(float(positions[i]%1))) + ", 0.0, 0.0, "+ str(n * KpGap + KpGap) + '\\n" \n')
+    
+    m = 2
+    for k in range(TauNumber): 
+        for n in range(KpNumber):      
+            myfile.write('\t\t\t\t\t\t"' + str(ContollerType[m]) + ", " + str(position*2*math.pi) + ', ' + str(TauInit/(2**n)) + ', 0.0, ' + str(KpInit/(2**n)) + '\\n" \n')
+            # myfile.write('\t\t\t\t\t\t"' + str(ContollerType[m]) + ", " + str(-2*math.pi*(float(positions[i]%1))) + ", 0.0, 0.0, "+ str(n * KpGap + KpGap) + '\\n" \n')
+
+    m = 3
+    for j in range(TauNumber): 
+        for k in range(TauNumber): 
+            for n in range(KpNumber):      
+                myfile.write('\t\t\t\t\t\t"' + str(ContollerType[m]) + ", " + str(position*2*math.pi) + ', ' + str(TauInit/(2**n)) + ', ' + str(TauInit/(2**n)) + ', ' + str(KpInit/(2**n)) + '\\n" \n')
+                # myfile.write('\t\t\t\t\t\t"' + str(ContollerType[m]) + ", " + str(-2*math.pi*(float(positions[i]%1))) + ", 0.0, 0.0, "+ str(n * KpGap + KpGap) + '\\n" \n')
+    myfile.write('\t\t\t\t\t\t;')
+
+print('CSV file written!', end = '\n')
+
+    

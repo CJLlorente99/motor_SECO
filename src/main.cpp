@@ -1,14 +1,30 @@
 #include "main.h"
-#include <stdio.h>
+#include "CSVPos.h"
 
 /* Encoder variables */
 volatile int pulseCounter;
 int timerms;
 
-int pulses[1251];
+int* pulses;
 float lastRad;
 float* previousError;
 int sizeError;
+float actualVoltage;
+
+/* CSV data */
+float* csv_positions;
+int* csv_controllerType;
+float* csv_Kp;
+float* csv_TauD;
+float* csv_TauI;
+
+int controllerType;
+float finalRad;
+float csvKp;
+float csvTauD;
+float csvTauI;
+int csvIndex;
+int csvSize;
 
 /* Flag activated by timer to send serial data */
 int show_Serial;
@@ -23,8 +39,6 @@ enum controllerTypes {
     INTEGRALDERIVATIVE
 };
 
-controllerTypes controllerType;
-
 void setup() {
     delay(5000);
     int rv;
@@ -32,14 +46,17 @@ void setup() {
     /* Init counters */   
     pulseCounter = 0;
     timerms = 0;
-
-    memset(pulses, 0, 1251*sizeof(int));
+    pulses = NULL;
 
     show_Serial = 0;
     controllerActivation = 0;
-    controllerType = CONTROLLERTOUSE;
     lastRad = 0;
     sizeError = 0;
+    previousError = NULL;
+    actualVoltage = 0;
+
+    /* CSV init */
+    csvIndex = 0;
 
     /* Set pinMode */
     // pinMode(port_PWM_H_IN1, INPUT);
@@ -59,10 +76,26 @@ void setup() {
     /* Baudrate  */
     Serial.begin(115200);
 
+    /* CSV parser for positions */
+    CSV_Parser cp(csv_str, "Lffff");
+    csvSize = cp.getRowsCount();
+
+    csv_positions = (float*)cp["POSITION"];
+    csv_controllerType = (int*)cp["CONTROLLER"];
+    csv_Kp = (float*)cp["KP"];
+    csv_TauD = (float*)cp["TAUD"];
+    csv_TauI = (float*)cp["TAUI"];
+
+    controllerType = csv_controllerType[csvIndex];
+    finalRad = csv_positions[csvIndex];
+    csvKp = csv_Kp[csvIndex];
+    csvTauD = csv_TauD[csvIndex];
+    csvTauI = csv_TauI[csvIndex];
+
     /* Timer creation and configuration. Timer is  */
     Timer0.attachInterrupt(&sampleData).start(1000);
     Timer1.attachInterrupt(&activateController).start(PERIOD);
-    Timer2.attachInterrupt(&serialActivate).start(1200000);
+    Timer2.attachInterrupt(&serialActivate).start(10000);
 
     /* Configure PWM */
     rv = configurePWM(0, FREQ);
@@ -75,6 +108,7 @@ void setup() {
 
     Serial.println("Setup completed");
     Serial.println("Entering infinite loop");
+    Serial.println("TIME,FINALRAD,CONTROLLER,KP,TAUD,TAUI,PULSES");
 
 }
 
@@ -83,15 +117,25 @@ void loop() {
         Timer0.stop();
         Timer1.stop();
         Timer2.stop();
-        for(int i = 0; i < 1201; i++){
+        for(int i = 0; i < timerms; i++){
             Serial.print(i);
+            Serial.print(", ");
+            Serial.print(finalRad);
+            Serial.print(", ");
+            Serial.print(controllerType);
+            Serial.print(", ");
+            Serial.print(csvKp);
+            Serial.print(", ");
+            Serial.print(csvTauD);
+            Serial.print(", ");
+            Serial.print(csvTauI);
             Serial.print(", ");
             Serial.println(pulses[i]);
         }
        
-        Timer4.attachInterrupt(&restartExecution).start(500000);
-
         show_Serial = 0;
+        controllerActivation = 0;
+        Timer4.attachInterrupt(&restartExecution).start(2000000);
     }
 
     if(controllerActivation){
@@ -100,37 +144,45 @@ void loop() {
         switch (controllerType)
         {
         case PROPORTIONAL:
-            proportionalController(FINALRAD, actualRad, KP);
+            actualVoltage = proportionalController(finalRad, actualRad, csvKp);
             break;
 
         case DERIVATIVE:
-            proportionalDerivativeController(FINALRAD, actualRad, lastRad, KP, TAUD, PERIOD);
+            actualVoltage = proportionalDerivativeController(finalRad, actualRad, lastRad, csvKp, csvTauD, PERIOD);
             lastRad = actualRad;
             break;
 
         case INTEGRAL:
-            proportionalIntegralController(FINALRAD, actualRad, previousError, sizeError, KP, TAUI, PERIOD);
+            actualVoltage = proportionalIntegralController(finalRad, actualRad, previousError, sizeError, csvKp, csvTauI, PERIOD);
             previousError = (float*)realloc(previousError, ++sizeError * sizeof(float));
-            previousError[sizeError - 1] = FINALRAD - actualRad;
+            previousError[sizeError - 1] = finalRad*REDUCTORA - actualRad;
             break;
 
         case INTEGRALDERIVATIVE:
-            proportionalIntegralDerivativeController(FINALRAD, actualRad, lastRad, previousError, sizeError, KP, TAUI, TAUD, PERIOD);
+            actualVoltage = proportionalIntegralDerivativeController(finalRad, actualRad, lastRad, previousError, sizeError, csvKp, csvTauI, csvTauD, PERIOD);
             previousError = (float*)realloc(previousError, ++sizeError * sizeof(float));
-            previousError[sizeError - 1] = FINALRAD - actualRad;
+            previousError[sizeError - 1] = finalRad*REDUCTORA - actualRad;
             lastRad = actualRad;
             break;
         
         default:
             break;
         }
+
+        controllerActivation = 0;
     }
 }
 
 /* Timer routine fo showing serial info periodically */
 void
 serialActivate(){
-    show_Serial = 1;
+    float actualRad = pulsesToRad(pulseCounter);
+    if((abs(finalRad*REDUCTORA - actualRad) < 2*PI/CPR) && (abs(actualVoltage) < 0.6)){
+        Serial.println("Hola");
+        show_Serial = 1;
+    } else {
+        show_Serial = 0;
+    }
 }
 
 /* Timer routine to activate controller */
@@ -142,44 +194,58 @@ activateController(){
 /* */
 void
 sampleData(){
-    pulses[++timerms] = pulseCounter;
+    pulses = (int*)realloc(pulses, ++timerms * sizeof(int));
+    pulses[timerms - 1] = pulseCounter;
 }
 
 /* ISR for encoder interruptions */
 void
 ENCODER1_ISR(){
     if(digitalRead(port_ENCODER_IN1) == digitalRead(port_ENCODER_IN2)){
-        pulseCounter++;
-    } else{
         pulseCounter--;
+    } else{
+        pulseCounter++;
     }
 }
 
 void
 ENCODER2_ISR(){
     if(digitalRead(port_ENCODER_IN1) == digitalRead(port_ENCODER_IN2)){
-        pulseCounter--;
-    } else{
         pulseCounter++;
+    } else{
+        pulseCounter--;
     }
 }
 
 void
 restartExecution(){
-    memset(pulses, 0, 1251 * sizeof(int));
-
+    Timer4.stop();
+    memset(pulses, 0, timerms*sizeof(int));
     timerms = 0;
     pulseCounter = 0;
 
+    csvIndex++;
+    if(csvIndex == csvSize){
+        Serial.println("TEST ENDED");
+        while(1){
+            // idle
+        }
+    }
+
+    controllerType = csv_controllerType[csvIndex];
+    finalRad = csv_positions[csvIndex];
+    csvKp = csv_Kp[csvIndex];
+    csvTauD = csv_TauD[csvIndex];
+    csvTauI = csv_TauI[csvIndex];    
+
+    Timer1.start(PERIOD);
+    Timer2.start(10000);
     Timer0.start(1000);
-    Timer1.start(10000);
-    Timer2.start(1200000);
-    Timer4.stop();
 }
 
 /* From pulses to rad */
 float
 pulsesToRad(int pulses){
-    float res = pulses/CPR * 2 * PI;
+    float res = pulses * 2 * PI /CPR;
     return res;
 }

@@ -1,7 +1,10 @@
 #include <Arduino.h>
+#include <stdio.h>
 
 #include <DueTimer.h>
 #include "SPI.h"
+#include "CSV_Parser.h"
+#include "SD.h"
 
 #define port_PWM_H_IN1 4
 #define port_PWM_H_IN2 5
@@ -17,13 +20,9 @@
 #define FREQ 20000
 
 /* Controller constants */
-#define FINALRAD PI/2
-#define CONTROLLERTOUSE PROPORTIONAL
 #define PERIOD 10000
-#define TAUD 0.5
-#define TAUI 0.5
+#define REDUCTORA 75
 
-#define KP 1
 
 /* ISR declaration for timers and GPIO interruptions */
 void ENCODER1_ISR();
@@ -78,7 +77,7 @@ float readPos(int pulses);
  *      - actualRad -> float
  *      - Kp -> float
 */
-void proportionalController(float finalRad, float actualRad, float Kp);
+float proportionalController(float finalRad, float actualRad, float Kp);
 
 /*
  *
@@ -86,7 +85,7 @@ void proportionalController(float finalRad, float actualRad, float Kp);
  * 
  * 
 */
-void proportionalDerivativeController(float finalRad, float actualRad, float lastRad, float Kp, float tauD, int period);
+float proportionalDerivativeController(float finalRad, float actualRad, float lastRad, float Kp, float tauD, float period);
 
 /*
  *
@@ -94,7 +93,7 @@ void proportionalDerivativeController(float finalRad, float actualRad, float las
  * 
  * 
 */
-void proportionalIntegralController(float finalRad, float actualRad, float lastErrorArray[], int sizeError, float Kp, float tauI, int period);
+float proportionalIntegralController(float finalRad, float actualRad, float lastErrorArray[], int sizeError, float Kp, float tauI, float period);
 
 /*
  *
@@ -102,4 +101,4 @@ void proportionalIntegralController(float finalRad, float actualRad, float lastE
  * 
  * 
 */
-void proportionalIntegralDerivativeController(float finalRad, float actualRad, float lastRad, float lastErrorArray[], int sizeError, float Kp, float tauI, float tauD, int period);
+float proportionalIntegralDerivativeController(float finalRad, float actualRad, float lastRad, float lastErrorArray[], int sizeError, float Kp, float tauI, float tauD, float period);
