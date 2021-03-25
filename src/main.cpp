@@ -6,10 +6,13 @@ volatile int pulseCounter;
 int timerms;
 
 int* pulses;
+float* voltages;
+float* errors;
 float lastRad;
 float* previousError;
 int sizeError;
 float actualVoltage;
+float error;
 
 /* CSV data */
 float* csv_positions;
@@ -108,7 +111,7 @@ void setup() {
 
     Serial.println("Setup completed");
     Serial.println("Entering infinite loop");
-    Serial.println("TIME,FINALRAD,CONTROLLER,KP,TAUD,TAUI,PULSES");
+    Serial.println("TIME,FINALRAD,CONTROLLER,KP,TAUD,TAUI,ERROR,CONTROLLERVOLTAGE,PULSES");
 
 }
 
@@ -130,6 +133,10 @@ void loop() {
             Serial.print(", ");
             Serial.print(csvTauI);
             Serial.print(", ");
+            Serial.print(errors[i]);
+            Serial.print(", ");
+            Serial.print(voltages[i]);
+            Serial.print(", ");
             Serial.println(pulses[i]);
         }
        
@@ -145,17 +152,20 @@ void loop() {
         {
         case PROPORTIONAL:
             actualVoltage = proportionalController(finalRad, actualRad, csvKp);
+            error = finalRad - actualRad/REDUCTORA;
             break;
 
         case DERIVATIVE:
             actualVoltage = proportionalDerivativeController(finalRad, actualRad, lastRad, csvKp, csvTauD, PERIOD);
             lastRad = actualRad;
+            error = finalRad - actualRad/REDUCTORA;
             break;
 
         case INTEGRAL:
             actualVoltage = proportionalIntegralController(finalRad, actualRad, previousError, sizeError, csvKp, csvTauI, PERIOD);
             previousError = (float*)realloc(previousError, ++sizeError * sizeof(float));
             previousError[sizeError - 1] = finalRad*REDUCTORA - actualRad;
+            error = finalRad - actualRad/REDUCTORA;
             break;
 
         case INTEGRALDERIVATIVE:
@@ -163,6 +173,7 @@ void loop() {
             previousError = (float*)realloc(previousError, ++sizeError * sizeof(float));
             previousError[sizeError - 1] = finalRad*REDUCTORA - actualRad;
             lastRad = actualRad;
+            error = finalRad - actualRad/REDUCTORA;
             break;
         
         default:
@@ -179,7 +190,6 @@ serialActivate(){
     // Iniciar timer3 que activa una variable
     float actualRad = pulsesToRad(pulseCounter);
     if((abs(finalRad*REDUCTORA - actualRad) < 2*PI/CPR) && (abs(actualVoltage) < 0.6)){
-        Serial.println("Hola");
         show_Serial = 1;
         // Apagar timer3 para que no se active una variable
     } else {
@@ -198,6 +208,12 @@ void
 sampleData(){
     pulses = (int*)realloc(pulses, ++timerms * sizeof(int));
     pulses[timerms - 1] = pulseCounter;
+
+    voltages = (float*)realloc(voltages, ++timerms * sizeof(float));
+    voltages[timerms - 1] = actualVoltage;
+
+    errors = (float*)realloc(errors, ++timerms * sizeof(float));
+    errors[timerms - 1] = error;
 }
 
 /* ISR for encoder interruptions */

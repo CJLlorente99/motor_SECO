@@ -1,20 +1,29 @@
 % Gc = Kp(1+tauD*s)
 % G = KM/(s(s+pM))
 
-tauDgrid = 0.05;
+reductora = 75;
+
+tauDgrid = 0.1;
 tauDmax = 2;
 
 figurePerSubplot = 4;
 figureNum = 1;
 
 for tauD = 0:tauDgrid:tauDmax
-    num = [tauD*KM KM];
+    num = [tauD*KM KM]./reductora;
     den = [1 pM 0];
     
     figure (ceil(figureNum/figurePerSubplot))
     subplot (2,2,mod(figureNum-1, figurePerSubplot)+1)
     rlocus(num,den);
     title(['\tau_{d} = ', num2str(tauD)])
+    hold on;
+    figureNum = figureNum + 1;
+    
+    figure (ceil(figureNum/figurePerSubplot))
+    subplot (2,2,mod(figureNum-1, figurePerSubplot)+1)
+    impulse(num,den)
+    title(['Impulso \tau_{d} = ', num2str(tauD)])
     hold on;
     figureNum = figureNum + 1;
 end
