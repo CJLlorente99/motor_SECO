@@ -1,0 +1,5 @@
+Los experimentos presentes y sus nombres son
+FinalRad = 6.28, Controller = 3, , Kp = 1.5, TauD = 0.01, TauI = 3.0, nombre del fichero = ./data8/data/exp_6.28_3_1.5_0.01_3.0.txt
+FinalRad = 6.28, Controller = 3, , Kp = 0.75, TauD = 0.01, TauI = 3.0, nombre del fichero = ./data8/data/exp_6.28_3_0.75_0.01_3.0.txt
+FinalRad = 6.28, Controller = 3, , Kp = 0.37, TauD = 0.01, TauI = 3.0, nombre del fichero = ./data8/data/exp_6.28_3_0.37_0.01_3.0.txt
+FinalRad = 6.28, Controller = 3, , Kp = 1.5, TauD = 0.0, TauI = 3.0, nombre del fichero = ./data8/data/exp_6.28_3_1.5_0.0_3.0.txt

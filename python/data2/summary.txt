@@ -1,0 +1,15 @@
+Los experimentos presentes y sus nombres son
+FinalRad = 6.28, Controller = 0, , Kp = 2.0, TauD = 0.0, TauI = 0.0, nombre del fichero = ./data2/data/exp_6.28_0_2.0_0.0_0.0.txt
+FinalRad = 6.28, Controller = 0, , Kp = 1.0, TauD = 0.0, TauI = 0.0, nombre del fichero = ./data2/data/exp_6.28_0_1.0_0.0_0.0.txt
+FinalRad = 6.28, Controller = 0, , Kp = 0.5, TauD = 0.0, TauI = 0.0, nombre del fichero = ./data2/data/exp_6.28_0_0.5_0.0_0.0.txt
+FinalRad = 6.28, Controller = 0, , Kp = 0.25, TauD = 0.0, TauI = 0.0, nombre del fichero = ./data2/data/exp_6.28_0_0.25_0.0_0.0.txt
+FinalRad = 6.28, Controller = 1, , Kp = 2.0, TauD = 0.01, TauI = 0.0, nombre del fichero = ./data2/data/exp_6.28_1_2.0_0.01_0.0.txt
+FinalRad = 6.28, Controller = 1, , Kp = 1.0, TauD = 0.01, TauI = 0.0, nombre del fichero = ./data2/data/exp_6.28_1_1.0_0.01_0.0.txt
+FinalRad = 6.28, Controller = 1, , Kp = 0.5, TauD = 0.01, TauI = 0.0, nombre del fichero = ./data2/data/exp_6.28_1_0.5_0.01_0.0.txt
+FinalRad = 6.28, Controller = 1, , Kp = 0.25, TauD = 0.01, TauI = 0.0, nombre del fichero = ./data2/data/exp_6.28_1_0.25_0.01_0.0.txt
+FinalRad = 6.28, Controller = 1, , Kp = 2.0, TauD = 0.0, TauI = 0.0, nombre del fichero = ./data2/data/exp_6.28_1_2.0_0.0_0.0.txt
+FinalRad = 6.28, Controller = 1, , Kp = 1.0, TauD = 0.0, TauI = 0.0, nombre del fichero = ./data2/data/exp_6.28_1_1.0_0.0_0.0.txt
+FinalRad = 6.28, Controller = 1, , Kp = 0.5, TauD = 0.0, TauI = 0.0, nombre del fichero = ./data2/data/exp_6.28_1_0.5_0.0_0.0.txt
+FinalRad = 6.28, Controller = 1, , Kp = 0.25, TauD = 0.0, TauI = 0.0, nombre del fichero = ./data2/data/exp_6.28_1_0.25_0.0_0.0.txt
+FinalRad = 6.28, Controller = 2, , Kp = 2.0, TauD = 0.0, TauI = 2.0, nombre del fichero = ./data2/data/exp_6.28_2_2.0_0.0_2.0.txt
+FinalRad = 6.28, Controller = 2, , Kp = 1.0, TauD = 0.0, TauI = 2.0, nombre del fichero = ./data2/data/exp_6.28_2_1.0_0.0_2.0.txt
