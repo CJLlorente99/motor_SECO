@@ -13,38 +13,39 @@ import numpy as np
 position = 1
     # print(positions)
 
-ContollerType = [0, 1, 2, 3]
-TauInit = 2
-TauNumber = 4
-KpInit = 2
-KpNumber = 4
+ControllerType = [0, 1, 2, 3]
+TauIInit = 3
+TauDInit = 0.01
+TauNumber = 3
+KpInit = 1.5
+KpNumber = 3
 
-with open("positions.txt", 'w') as myfile:
+with open("../src/CSVPos.h", 'w') as myfile:
     myfile.write('const char* csv_str = \t"CONTROLLER, POSITION, TAUI, TAUD, KP\\n"\n')
 
-    m = 0
-    for n in range(KpNumber):      
-        myfile.write('\t\t\t\t\t\t"' + str(ContollerType[m]) + ", " + str(position*2*math.pi) + ', 0.0, 0.0, ' + str(KpInit/(2**n)) + '\\n" \n')
-        # myfile.write('\t\t\t\t\t\t"' + str(ContollerType[m]) + ", " + str(-2*math.pi*(float(positions[i]%1))) + ", 0.0, 0.0, "+ str(n * KpGap + KpGap) + '\\n" \n')
+    # m = 0
+    # for n in range(KpNumber):      
+    #     myfile.write('\t\t\t\t\t\t"' + str(ControllerType[m]) + ", " + str(position*2*math.pi) + ', 0.0, 0.0, ' + str(KpInit/(2**n)) + '\\n" \n')
+    #     # myfile.write('\t\t\t\t\t\t"' + str(ControllerType[m]) + ", " + str(-2*math.pi*(float(positions[i]%1))) + ", 0.0, 0.0, "+ str(n * KpGap + KpGap) + '\\n" \n')
     
-    m = 1
-    for j in range(TauNumber): 
-        for n in range(KpNumber):      
-            myfile.write('\t\t\t\t\t\t"' + str(ContollerType[m]) + ", " + str(position*2*math.pi) + ', 0.0, ' + str(TauInit/(2**n)) + ', ' + str(KpInit/(2**n)) + '\\n" \n')
-            # myfile.write('\t\t\t\t\t\t"' + str(ContollerType[m]) + ", " + str(-2*math.pi*(float(positions[i]%1))) + ", 0.0, 0.0, "+ str(n * KpGap + KpGap) + '\\n" \n')
+    # m = 1
+    # for j in range(TauNumber): 
+    #     for n in range(KpNumber):      
+    #         myfile.write('\t\t\t\t\t\t"' + str(ControllerType[m]) + ", " + str(position*2*math.pi) + ', 0.0, ' + str(TauDInit/(2**j)) + ', ' + str(KpInit/(2**n)) + '\\n" \n')
+    #         # myfile.write('\t\t\t\t\t\t"' + str(ControllerType[m]) + ", " + str(-2*math.pi*(float(positions[i]%1))) + ", 0.0, 0.0, "+ str(n * KpGap + KpGap) + '\\n" \n')
     
-    m = 2
-    for k in range(TauNumber): 
-        for n in range(KpNumber):      
-            myfile.write('\t\t\t\t\t\t"' + str(ContollerType[m]) + ", " + str(position*2*math.pi) + ', ' + str(TauInit/(2**n)) + ', 0.0, ' + str(KpInit/(2**n)) + '\\n" \n')
-            # myfile.write('\t\t\t\t\t\t"' + str(ContollerType[m]) + ", " + str(-2*math.pi*(float(positions[i]%1))) + ", 0.0, 0.0, "+ str(n * KpGap + KpGap) + '\\n" \n')
+    # m = 2
+    # for k in range(TauNumber): 
+    #     for n in range(KpNumber):      
+    #         myfile.write('\t\t\t\t\t\t"' + str(ControllerType[m]) + ", " + str(position*2*math.pi) + ', ' + str(TauIInit/(2**k)) + ', 0.0, ' + str(KpInit/(2**n)) + '\\n" \n')
+    #         # myfile.write('\t\t\t\t\t\t"' + str(ControllerType[m]) + ", " + str(-2*math.pi*(float(positions[i]%1))) + ", 0.0, 0.0, "+ str(n * KpGap + KpGap) + '\\n" \n')
 
     m = 3
     for j in range(TauNumber): 
         for k in range(TauNumber): 
             for n in range(KpNumber):      
-                myfile.write('\t\t\t\t\t\t"' + str(ContollerType[m]) + ", " + str(position*2*math.pi) + ', ' + str(TauInit/(2**n)) + ', ' + str(TauInit/(2**n)) + ', ' + str(KpInit/(2**n)) + '\\n" \n')
-                # myfile.write('\t\t\t\t\t\t"' + str(ContollerType[m]) + ", " + str(-2*math.pi*(float(positions[i]%1))) + ", 0.0, 0.0, "+ str(n * KpGap + KpGap) + '\\n" \n')
+                myfile.write('\t\t\t\t\t\t"' + str(ControllerType[m]) + ", " + str(position*2*math.pi) + ', ' + str(TauIInit/(2**j)) + ', ' + str(TauDInit/(2**k)) + ', ' + str(KpInit/(2**n)) + '\\n" \n')
+                # myfile.write('\t\t\t\t\t\t"' + str(ControllerType[m]) + ", " + str(-2*math.pi*(float(positions[i]%1))) + ", 0.0, 0.0, "+ str(n * KpGap + KpGap) + '\\n" \n')
     myfile.write('\t\t\t\t\t\t;')
 
 print('CSV file written!', end = '\n')

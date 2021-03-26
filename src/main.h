@@ -31,6 +31,7 @@ void serialActivate();
 void sampleData();
 void restartExecution();
 void activateController();
+void precautiusTimerISR();
 
 /* From pulses to rad */
 float pulsesToRad(int pulses);

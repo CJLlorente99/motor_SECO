@@ -33,8 +33,12 @@ if __name__ == "__main__":
         if line:
             line = line.decode('utf-8')
             with open(path, 'at') as file:
-                file.write(line + '\n')
+                file.write(line)
             if(line == "TEST ENDED"):
-                print("TEST ENDED")
+                print("TEST ENDED\n")
                 exit()
+            elif(line == 'NEXT EXPERIMENT\n'):
+                print('NEXT EXPERIMENT')
+            else:
+                print(line)
 

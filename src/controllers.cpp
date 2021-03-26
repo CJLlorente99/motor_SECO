@@ -17,7 +17,7 @@ proportionalDerivativeController(float finalRad, float actualRad, float lastRad,
 }
 
 float
-proportionalIntegralController(float finalRad, float actualRad, float lastErrorArray[], int sizeError, float Kp, float tauI, float period){
+proportionalIntegralController(float finalRad, float actualRad, float* lastErrorArray, int sizeError, float Kp, float tauI, float period){
     float error = finalRad*REDUCTORA - actualRad;
 
     float errorIntegral = 0;
@@ -32,7 +32,7 @@ proportionalIntegralController(float finalRad, float actualRad, float lastErrorA
 }
 
 float
-proportionalIntegralDerivativeController(float finalRad, float actualRad, float lastRad, float lastErrorArray[], int sizeError, float Kp, float tauI, float tauD, float period){
+proportionalIntegralDerivativeController(float finalRad, float actualRad, float lastRad, float* lastErrorArray, int sizeError, float Kp, float tauI, float tauD, float period){
     float error = finalRad*REDUCTORA - actualRad;
     float errorDerivative = (lastRad - actualRad)/(period/1000000);
 
