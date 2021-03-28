@@ -21,9 +21,9 @@ for voltage in voltageValues:
 
 for voltage in voltageValues:
     if(voltage % 1 == 0):
-        fileName ='MotorDCPololu.0ms600ms600ms_T1ms_ST.mean.' + str(int(voltage)) + 'V.polo'
+        fileName ='trap' + str(int(voltage)) + 'V_0ms600ms600ms_T1ms_ST.mean.'
     else:
-        fileName ='MotorDCPololu.0ms600ms600ms_T1ms_ST.mean.' + str(voltage) + 'V.polo'
+        fileName ='trap' + str(voltage) + 'V_0ms600ms600ms_T1ms_ST.mean.'
 
     print('Starting to write ' + fileName) 
     with open(args.outputFolder + fileName, 'w') as f:
