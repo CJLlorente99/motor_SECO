@@ -12,7 +12,7 @@ figureNum = 1;
 
 for tauI = tauIgrid:tauIgrid:tauImax
     for tauD = 0:tauDgrid:tauDmax
-        num = [tauD*tauI*KM tauI*KM KM]./75;
+        num = [tauD*tauI*KM tauI*KM KM]./1000;
         den = [tauI tauI*pM 0 0];
 
         figure (ceil(figureNum/figurePerSubplot))

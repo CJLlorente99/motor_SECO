@@ -8,7 +8,7 @@ figurePerSubplot = 4;
 figureNum = 1;
 
 for tauD = 0:tauDgrid:tauDmax
-    num = [tauD*KM KM]./75;
+    num = [tauD*KM KM]./1000;
     den = [1 pM 0];
     
     figure (ceil(figureNum/figurePerSubplot))
