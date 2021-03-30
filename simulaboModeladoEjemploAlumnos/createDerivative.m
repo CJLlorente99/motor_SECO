@@ -1,16 +1,14 @@
 % Gc = Kp(1+tauD*s)
 % G = KM/(s(s+pM))
 
-reductora = 75;
-
-tauDgrid = 0.1;
-tauDmax = 2;
+tauDgrid = 0.01;
+tauDmax = 0.02;
 
 figurePerSubplot = 4;
 figureNum = 1;
 
 for tauD = 0:tauDgrid:tauDmax
-    num = [tauD*KM KM]./reductora;
+    num = [tauD*KM KM];
     den = [1 pM 0];
     
     figure (ceil(figureNum/figurePerSubplot))
