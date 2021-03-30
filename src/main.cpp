@@ -148,17 +148,17 @@ void loop() {
         for(int i = 0; i < timerms; i++){
             Serial.print(i);
             Serial.print(",");
-            Serial.print(finalRad);
+            Serial.print(finalRad,4);
             Serial.print(",");
             Serial.print(controllerType);
             Serial.print(",");
-            Serial.print(csvKp);
+            Serial.print(csvKp,4);
             Serial.print(",");
-            Serial.print(csvTauD);
+            Serial.print(csvTauD,4);
             Serial.print(",");
-            Serial.print(csvTauI);
+            Serial.print(csvTauI,4);
             Serial.print(",");
-            Serial.print(voltages[i]);
+            Serial.print(voltages[i],4);
             Serial.print(",");
             Serial.println(pulses[i]);
         }
