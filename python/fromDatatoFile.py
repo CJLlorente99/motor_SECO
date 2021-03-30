@@ -28,6 +28,6 @@ for voltage in voltageValues:
     print('Starting to write ' + fileName) 
     with open(args.outputFolder + fileName, 'w') as f:
         for i in range(1201):
-            f.write(str(i) + ' ' + str(meanValues[voltage][i]) + "\n")
+            f.write(str(i) + ' ' + str(meanValues[voltage][i]*75) + "\n")
     print('Finished writing ' + fileName + '\n')
 
