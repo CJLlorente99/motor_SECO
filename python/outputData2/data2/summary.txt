@@ -1,0 +1,15 @@
+Los experimentos presentes y sus nombres son
+FinalRad = 6.2800, Controller = 0, , Kp = 2.0000, TauD = 0.0000, TauI = 0.0000, nombre del fichero = outputFolder/data2/data/exp_6.28_0_2.0_0.0_0.0.txt
+FinalRad = 6.2800, Controller = 0, , Kp = 1.0000, TauD = 0.0000, TauI = 0.0000, nombre del fichero = outputFolder/data2/data/exp_6.28_0_1.0_0.0_0.0.txt
+FinalRad = 6.2800, Controller = 0, , Kp = 0.5000, TauD = 0.0000, TauI = 0.0000, nombre del fichero = outputFolder/data2/data/exp_6.28_0_0.5_0.0_0.0.txt
+FinalRad = 6.2800, Controller = 0, , Kp = 0.2500, TauD = 0.0000, TauI = 0.0000, nombre del fichero = outputFolder/data2/data/exp_6.28_0_0.25_0.0_0.0.txt
+FinalRad = 6.2800, Controller = 1, , Kp = 2.0000, TauD = 0.0100, TauI = 0.0000, nombre del fichero = outputFolder/data2/data/exp_6.28_1_2.0_0.01_0.0.txt
+FinalRad = 6.2800, Controller = 1, , Kp = 1.0000, TauD = 0.0100, TauI = 0.0000, nombre del fichero = outputFolder/data2/data/exp_6.28_1_1.0_0.01_0.0.txt
+FinalRad = 6.2800, Controller = 1, , Kp = 0.5000, TauD = 0.0100, TauI = 0.0000, nombre del fichero = outputFolder/data2/data/exp_6.28_1_0.5_0.01_0.0.txt
+FinalRad = 6.2800, Controller = 1, , Kp = 0.2500, TauD = 0.0100, TauI = 0.0000, nombre del fichero = outputFolder/data2/data/exp_6.28_1_0.25_0.01_0.0.txt
+FinalRad = 6.2800, Controller = 1, , Kp = 2.0000, TauD = 0.0000, TauI = 0.0000, nombre del fichero = outputFolder/data2/data/exp_6.28_1_2.0_0.0_0.0.txt
+FinalRad = 6.2800, Controller = 1, , Kp = 1.0000, TauD = 0.0000, TauI = 0.0000, nombre del fichero = outputFolder/data2/data/exp_6.28_1_1.0_0.0_0.0.txt
+FinalRad = 6.2800, Controller = 1, , Kp = 0.5000, TauD = 0.0000, TauI = 0.0000, nombre del fichero = outputFolder/data2/data/exp_6.28_1_0.5_0.0_0.0.txt
+FinalRad = 6.2800, Controller = 1, , Kp = 0.2500, TauD = 0.0000, TauI = 0.0000, nombre del fichero = outputFolder/data2/data/exp_6.28_1_0.25_0.0_0.0.txt
+FinalRad = 6.2800, Controller = 2, , Kp = 2.0000, TauD = 0.0000, TauI = 2.0000, nombre del fichero = outputFolder/data2/data/exp_6.28_2_2.0_0.0_2.0.txt
+FinalRad = 6.2800, Controller = 2, , Kp = 1.0000, TauD = 0.0000, TauI = 2.0000, nombre del fichero = outputFolder/data2/data/exp_6.28_2_1.0_0.0_2.0.txt

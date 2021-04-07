@@ -45,7 +45,7 @@ for fileName in inputFiles:
         tags.append('exp_' + str(uniqueExperiments['FINALRAD'][i]) + '_' + str(uniqueExperiments['CONTROLLER'][i]) + '_' + str(uniqueExperiments['KP'][i]) + '_' + str(uniqueExperiments['TAUD'][i]) + '_' + str(uniqueExperiments['TAUI'][i]))
     uniqueExperiments['TAG'] = tags
 
-    # Summary dile
+    # Summary file
     with open('./outputData/data' + str(idx) + '/summary.txt','w') as file:
         file.write('Los experimentos presentes y sus nombres son\n')
         for i in range(uniqueExperiments.shape[0]):

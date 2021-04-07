@@ -23,7 +23,6 @@
 #define PERIOD 10000
 #define REDUCTORA 75
 
-
 /* ISR declaration for timers and GPIO interruptions */
 void ENCODER1_ISR();
 void ENCODER2_ISR();

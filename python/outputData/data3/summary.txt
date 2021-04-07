@@ -1,8 +1,0 @@
-Los experimentos presentes y sus nombres son
-FinalRad = 6.2800, Controller = 0.0, , Kp = 40.0000, TauD = 0.0000, TauI = 0.0000, nombre del fichero = outputFolder/data3/data/exp_6.28_0.0_40.0_0.0_0.0.txt
-FinalRad = 6.2800, Controller = 0.0, , Kp = 20.0000, TauD = 0.0000, TauI = 0.0000, nombre del fichero = outputFolder/data3/data/exp_6.28_0.0_20.0_0.0_0.0.txt
-FinalRad = 6.2800, Controller = 0.0, , Kp = 10.0000, TauD = 0.0000, TauI = 0.0000, nombre del fichero = outputFolder/data3/data/exp_6.28_0.0_10.0_0.0_0.0.txt
-FinalRad = 6.2800, Controller = 0.0, , Kp = 5.0000, TauD = 0.0000, TauI = 0.0000, nombre del fichero = outputFolder/data3/data/exp_6.28_0.0_5.0_0.0_0.0.txt
-FinalRad = 6.2800, Controller = 1.0, , Kp = 40.0000, TauD = 0.0100, TauI = 0.0000, nombre del fichero = outputFolder/data3/data/exp_6.28_1.0_40.0_0.01_0.0.txt
-FinalRad = 6.2800, Controller = 1.0, , Kp = 20.0000, TauD = 0.0100, TauI = 0.0000, nombre del fichero = outputFolder/data3/data/exp_6.28_1.0_20.0_0.01_0.0.txt
-FinalRad = 6.2800, Controller = 1.0, , Kp = 10.0000, TauD = 0.0100, TauI = 0.0000, nombre del fichero = outputFolder/data3/data/exp_6.28_1.0_10.0_0.01_0.0.txt

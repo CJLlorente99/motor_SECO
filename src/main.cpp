@@ -152,13 +152,13 @@ void loop() {
             Serial.print(",");
             Serial.print(controllerType);
             Serial.print(",");
-            Serial.print(csvKp);
+            Serial.print(csvKp,6);
             Serial.print(",");
-            Serial.print(csvTauD);
+            Serial.print(csvTauD,6);
             Serial.print(",");
-            Serial.print(csvTauI);
+            Serial.print(csvTauI,6);
             Serial.print(",");
-            Serial.print(voltages[i]);
+            Serial.print(voltages[i],4);
             Serial.print(",");
             Serial.println(pulses[i]);
         }
@@ -259,8 +259,10 @@ restartExecution(){
     Timer4.stop();
     memset(pulses, 0, timerms*sizeof(int));
     memset(voltages, 0, timerms*sizeof(int));
+    memset(previousError, 0, sizeError*sizeof(float));
     timerms = 0;
     pulseCounter = 0;
+    sizeError = 0;
 
     csvIndex++;
     if(csvIndex == csvSize){
