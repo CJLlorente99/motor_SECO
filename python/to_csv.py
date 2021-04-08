@@ -14,11 +14,11 @@ position = 1
     # print(positions)
 
 ControllerType = [0, 1, 2, 3]
-TauIInit = 1
-TauDInit = 0.01
-TauNumber = 3
-KpInit = 1.5
-KpNumber = 3
+TauIInit = 2
+TauDInit = 0.05
+TauNumber = 5
+KpInit = 10
+KpNumber = 5
 
 with open("../src/CSVPos.h", 'w') as myfile:
     myfile.write('const char* csv_str = \t"CONTROLLER, POSITION, TAUI, TAUD, KP\\n"\n')
