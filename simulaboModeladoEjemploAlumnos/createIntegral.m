@@ -1,5 +1,6 @@
 % Gc = Kp(1+1/(tauI*s))
 % G = KM/(s(s+pM))
+reductora = 75;
 
 tauIgrid = 100;
 tauImax = 2000;
@@ -8,7 +9,7 @@ figurePerSubplot = 4;
 figureNum = 1;
 
 for tauI = tauIgrid:tauIgrid:tauImax
-    num = [tauI*KM KM];
+    num = [tauI*KM KM]./reductora;
     den = [tauI pM*tauI 0 0];
     
     figure (ceil(figureNum/figurePerSubplot))
