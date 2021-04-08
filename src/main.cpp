@@ -148,7 +148,7 @@ void loop() {
         for(int i = 0; i < timerms; i++){
             Serial.print(i);
             Serial.print(",");
-            Serial.print(finalRad);
+            Serial.print(finalRad,4);
             Serial.print(",");
             Serial.print(controllerType);
             Serial.print(",");
