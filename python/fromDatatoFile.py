@@ -64,7 +64,8 @@ for fileName in inputFiles:
         fig = px.scatter(x=data['TIME'], y=(data['PULSES']*2*math.pi/48/75), title=uniqueExperiments['TAG'][i], labels=dict(x='Time [ms]', y='Position [rad]'))
         fig.add_hline(y=uniqueExperiments['FINALRAD'][i], line_color='red', line_width=1, line_dash='dash')
 
-        fig.write_html('./outputData/data' + str(idx) + '/data/' + uniqueExperiments['TAG'].loc[i] + '.html')    
+        fig.write_html('./outputData/data' + str(idx) + '/data/' + uniqueExperiments['TAG'].loc[i] + '.html')
+        fig.write_image('./outputData/data' + str(idx) + '/data/' + uniqueExperiments['TAG'].loc[i] + '.svg')     
         print('Experiment number : ' + str(i+1) + ' processed')
 
     print('Finished dealing with ' + str(fileName))
